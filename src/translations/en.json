@@ -1,0 +1,32 @@
+{
+    "common": {
+        "entity": "Charger status",
+        "name": "Name",
+        "power_entity": "Power sensor",
+        "session_time_entity": "Session time sensor",
+        "charge_control_entity": "Charging control switch"
+    },
+    "card": {
+        "current_usage": "Current usage",
+        "session_time": "Session time",
+        "start_charging": "Start charging",
+        "stop_charging": "Stop charging",
+        "charger_image": "Morek EV charger",
+        "hours_short": "h",
+        "minutes_short": "min"
+    },
+    "states": {
+        "charging": "Charging",
+        "available": "Available",
+        "preparing": "Preparing",
+        "finishing": "Finishing",
+        "suspendedev": "Suspended by vehicle",
+        "suspendedevse": "Suspended by charger",
+        "faulted": "Faulted",
+        "unavailable": "Unavailable",
+        "unknown": "Unknown"
+    },
+    "errors": {
+        "entity_required": "A charger status entity is required."
+    }
+}

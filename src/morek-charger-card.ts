@@ -4,6 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import type { HomeAssistant } from 'custom-card-helpers';
 import chargerImage from './assets/morek-charger.png';
 import { cardStyles } from './styles';
+import { getCurrentDocumentLanguage, localize } from './translations/localize';
 import type { MorekCardConfig } from './types';
 
 const CARD_TYPE = 'morek-charger-card';
@@ -34,7 +35,7 @@ const displayValue = (
     return `${numberValue.toFixed(decimals)} ${unit}`;
 };
 
-const sessionTime = (value: string | undefined): string => {
+const sessionTime = (value: string | undefined, language?: string): string => {
     const minutes = Number(value);
 
     if (!Number.isFinite(minutes)) return '—';
@@ -46,8 +47,16 @@ const sessionTime = (value: string | undefined): string => {
     const formattedMinutes = String(remainingMinutes);
 
     return hours > 0
-        ? `${formattedHours} h ${formattedMinutes} min`
-        : `${formattedMinutes} min`;
+        ? `${formattedHours} ${localize('card.hours_short', language)} ${formattedMinutes} ${localize('card.minutes_short', language)}`
+        : `${formattedMinutes} ${localize('card.minutes_short', language)}`;
+};
+
+const statusText = (status: string, language?: string): string => {
+    const key = status.toLowerCase().replaceAll(/[^a-z]/g, '');
+    const translationKey = `states.${key}`;
+    const translated = localize(translationKey, language);
+
+    return translated === translationKey ? status : translated;
 };
 
 @customElement(CARD_TYPE)
@@ -57,7 +66,11 @@ export class MorekChargerCard extends LitElement {
     @state() private config?: MorekCardConfig;
 
     public setConfig(config: MorekCardConfig): void {
-        if (!config.entity) throw new Error('A charger status entity is required.');
+        if (!config.entity) {
+            throw new Error(
+                localize('errors.entity_required', getCurrentDocumentLanguage()),
+            );
+        }
 
         this.config = { ...DEFAULT_CONFIG, ...config };
     }
@@ -77,6 +90,8 @@ export class MorekChargerCard extends LitElement {
     }
 
     public static getConfigForm(): object {
+        const language = getCurrentDocumentLanguage();
+
         return {
             schema: [
                 {
@@ -95,6 +110,8 @@ export class MorekChargerCard extends LitElement {
                     selector: { entity: { domain: 'switch' } },
                 },
             ],
+            computeLabel: (schema: { name: string }): string =>
+                localize(`common.${schema.name}`, language),
         };
     }
 
@@ -103,13 +120,17 @@ export class MorekChargerCard extends LitElement {
         const status = statusEntity
             ? (this.hass?.states[statusEntity]?.state ?? 'Unknown')
             : 'Unknown';
-        const name = this.config?.name ?? 'Morek EV 22 kW Charger';
+        const name = this.config?.name ?? 'Morek EV Charger';
         const power = this.hass?.states[this.config?.power_entity ?? '']?.state;
         const time = this.hass?.states[this.config?.session_time_entity ?? '']?.state;
         const chargeControlEntity = this.config?.charge_control_entity;
         const isChargeControlOn =
             this.hass?.states[chargeControlEntity ?? '']?.state === 'on';
-        const label = isChargeControlOn ? 'Stop charging' : 'Start charging';
+        const language = this.hass?.language;
+        const label = localize(
+            isChargeControlOn ? 'card.stop_charging' : 'card.start_charging',
+            language,
+        );
 
         return html`
             <ha-card style=${styleMap({ '--morek-color': stateColor(status) })}>
@@ -120,30 +141,35 @@ export class MorekChargerCard extends LitElement {
                 >
                     <div>
                         <div class="name">${name}</div>
-                        <div class="status">${status}</div>
+                        <div class="status">${statusText(status, language)}</div>
                         <div class="metrics">
                             <div class="metric">
-                                <span class="metric-label">Current usage</span
+                                <span class="metric-label"
+                                    >${localize('card.current_usage', language)}</span
                                 ><span class="metric-value"
                                     >${displayValue(power, 2, 'kW')}</span
                                 >
                             </div>
                             <div class="metric">
-                                <span class="metric-label">Session time</span
-                                ><span class="metric-value">${sessionTime(time)}</span>
+                                <span class="metric-label"
+                                    >${localize('card.session_time', language)}</span
+                                ><span class="metric-value"
+                                    >${sessionTime(time, language)}</span
+                                >
                             </div>
                         </div>
                     </div>
                     <img
                         class="charger-image"
                         src=${chargerImage}
-                        alt="Morek EV charger"
+                        alt=${localize('card.charger_image', language)}
                     />
                 </button>
                 <div class="actions">
                     <button
                         class="action-button"
                         type="button"
+                        aria-label=${label}
                         ?disabled=${!chargeControlEntity || !this.hass}
                         @click=${(event: Event) =>
                             void this.toggleCharging(event, chargeControlEntity)}

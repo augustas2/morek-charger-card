@@ -1,0 +1,32 @@
+{
+    "common": {
+        "entity": "Įkroviklio būsenos jutiklis",
+        "name": "Pavadinimas",
+        "power_entity": "Galios jutiklis",
+        "session_time_entity": "Sesijos laiko jutiklis",
+        "charge_control_entity": "Įkrovimo valdymo jungiklis"
+    },
+    "card": {
+        "current_usage": "Dabartinė galia",
+        "session_time": "Sesijos laikas",
+        "start_charging": "Pradėti įkrovimą",
+        "stop_charging": "Sustabdyti įkrovimą",
+        "charger_image": "Morek EV įkroviklis",
+        "hours_short": "val.",
+        "minutes_short": "min."
+    },
+    "states": {
+        "charging": "Įkraunama",
+        "available": "Laisvas",
+        "preparing": "Ruošiamasi",
+        "finishing": "Baigiama",
+        "suspendedev": "Sustabdyta automobilio",
+        "suspendedevse": "Sustabdyta įkroviklio",
+        "faulted": "Klaida",
+        "unavailable": "Neprieinamas",
+        "unknown": "Nežinoma"
+    },
+    "errors": {
+        "entity_required": "Reikia nurodyti įkroviklio būsenos jutiklį."
+    }
+}
