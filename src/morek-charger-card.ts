@@ -141,14 +141,15 @@ export class MorekChargerCard extends LitElement {
 
         return html`
             <ha-card style=${styleMap({ '--morek-color': stateColor(status) })}>
-                <button
-                    class="content"
-                    type="button"
-                    @click=${() => this.openMoreInfo(statusEntity)}
-                >
+                <div class="content">
                     <div>
                         <div class="name">${name}</div>
-                        <div class="status">${statusText(status, language)}</div>
+                        <div
+                            class="status"
+                            @click=${() => this.openMoreInfo(statusEntity)}
+                        >
+                            ${statusText(status, language)}
+                        </div>
                         <div class="metrics">
                             <div class="metric">
                                 <span class="metric-label"
@@ -178,7 +179,7 @@ export class MorekChargerCard extends LitElement {
                         src=${chargerImage}
                         alt=${localize('card.charger_image', language)}
                     />
-                </button>
+                </div>
                 <div class="actions">
                     <button
                         class="action-button"

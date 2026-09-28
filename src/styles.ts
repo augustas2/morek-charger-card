@@ -11,11 +11,6 @@ export const cardStyles = css`
     }
 
     .content {
-        appearance: none;
-        border: 0;
-        background: transparent;
-        color: inherit;
-        cursor: pointer;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 128px;
         gap: var(--ha-space-3, 12px);
@@ -30,39 +25,60 @@ export const cardStyles = css`
         font-size: var(--ha-font-size-xl, 22px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
+
     .status {
+        appearance: none;
+        border: 0;
+        background: transparent;
         margin-top: var(--ha-space-3, 12px);
         color: var(--morek-color);
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
         font-size: var(--ha-font-size-l, 16px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
+
     .metrics {
         display: flex;
         flex-wrap: wrap;
         gap: var(--ha-space-4, 12px) var(--ha-space-8, 16px);
         margin-top: var(--ha-space-3, 12px);
     }
+
     .metric {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
         display: grid;
         gap: 2px;
+        padding: 0;
+        text-align: left;
     }
+
     .metric-label {
         color: var(--secondary-text-color);
         font-size: var(--ha-font-size-s, 12px);
     }
+
     .metric-value {
         font-size: var(--ha-font-size-l, 16px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
+
     .charger-image {
         width: 128px;
         height: 160px;
         object-fit: contain;
     }
+
     .actions {
         border-top: 1px solid var(--divider-color, rgba(0, 0, 0, 0.08));
         padding: var(--ha-space-3, 12px) var(--ha-space-4, 16px);
     }
+
     .action-button {
         width: 100%;
         appearance: none;
@@ -79,13 +95,16 @@ export const cardStyles = css`
         font: inherit;
         font-weight: var(--ha-font-weight-medium, 500);
     }
+    
     .action-button:hover {
         background: color-mix(in srgb, var(--morek-color) 22%, transparent);
     }
+    
     .action-button:disabled {
         opacity: 0.45;
         cursor: not-allowed;
     }
+
     .action-button ha-icon {
         --mdc-icon-size: 22px;
     }
