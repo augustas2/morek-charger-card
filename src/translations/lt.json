@@ -23,7 +23,7 @@
     },
     "states": {
         "charging": "Įkraunama",
-        "available": "Laisvas",
+        "available": "Neprijungta",
         "preparing": "Ruošiamasi",
         "finishing": "Baigiama",
         "suspendedev": "Sustabdyta automobilio",
