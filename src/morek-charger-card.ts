@@ -11,6 +11,7 @@ const CARD_TYPE = 'morek-charger-card';
 const DEFAULT_CONFIG = {
     power_entity: 'sensor.charger_power_active_import',
     session_time_entity: 'sensor.charger_time_session',
+    session_energy_entity: 'sensor.charger_energy_session',
     charge_control_entity: 'switch.charger_charge_control',
 } satisfies Partial<MorekCardConfig>;
 
@@ -106,6 +107,10 @@ export class MorekChargerCard extends LitElement {
                     selector: { entity: { domain: 'sensor' } },
                 },
                 {
+                    name: 'session_energy_entity',
+                    selector: { entity: { domain: 'sensor' } },
+                },
+                {
                     name: 'charge_control_entity',
                     selector: { entity: { domain: 'switch' } },
                 },
@@ -123,6 +128,8 @@ export class MorekChargerCard extends LitElement {
         const name = this.config?.name ?? 'Morek EV Charger';
         const power = this.hass?.states[this.config?.power_entity ?? '']?.state;
         const time = this.hass?.states[this.config?.session_time_entity ?? '']?.state;
+        const sessionEnergy =
+            this.hass?.states[this.config?.session_energy_entity ?? '']?.state;
         const chargeControlEntity = this.config?.charge_control_entity;
         const isChargeControlOn =
             this.hass?.states[chargeControlEntity ?? '']?.state === 'on';
@@ -155,6 +162,13 @@ export class MorekChargerCard extends LitElement {
                                     >${localize('card.session_time', language)}</span
                                 ><span class="metric-value"
                                     >${sessionTime(time, language)}</span
+                                >
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label"
+                                    >${localize('card.session_energy', language)}</span
+                                ><span class="metric-value"
+                                    >${displayValue(sessionEnergy, 2, 'kWh')}</span
                                 >
                             </div>
                         </div>

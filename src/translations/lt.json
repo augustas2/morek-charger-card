@@ -4,11 +4,13 @@
         "name": "Pavadinimas",
         "power_entity": "Galios jutiklis",
         "session_time_entity": "Sesijos laiko jutiklis",
+        "session_energy_entity": "Sesijos energijos jutiklis",
         "charge_control_entity": "Įkrovimo valdymo jungiklis"
     },
     "card": {
         "current_usage": "Dabartinė galia",
         "session_time": "Sesijos laikas",
+        "session_energy": "Sesijos energija",
         "start_charging": "Pradėti įkrovimą",
         "stop_charging": "Sustabdyti įkrovimą",
         "charger_image": "Morek EV įkroviklis",

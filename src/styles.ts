@@ -38,7 +38,8 @@ export const cardStyles = css`
     }
     .metrics {
         display: flex;
-        gap: var(--ha-space-4, 16px);
+        flex-wrap: wrap;
+        gap: var(--ha-space-4, 12px) var(--ha-space-8, 16px);
         margin-top: var(--ha-space-3, 12px);
     }
     .metric {

@@ -14,6 +14,7 @@ entity: sensor.charger_status_connector
 name: Morek EV 22 kW Charger
 power_entity: sensor.charger_power_active_import
 session_time_entity: sensor.charger_time_session
+session_energy_entity: sensor.charger_energy_session
 charge_control_entity: switch.charger_charge_control
 ```
 

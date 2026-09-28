@@ -4,11 +4,13 @@
         "name": "Name",
         "power_entity": "Power sensor",
         "session_time_entity": "Session time sensor",
+        "session_energy_entity": "Session energy sensor",
         "charge_control_entity": "Charging control switch"
     },
     "card": {
         "current_usage": "Current usage",
         "session_time": "Session time",
+        "session_energy": "Session energy",
         "start_charging": "Start charging",
         "stop_charging": "Stop charging",
         "charger_image": "Morek EV charger",
