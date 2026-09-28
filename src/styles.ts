@@ -1,0 +1,91 @@
+import { css } from 'lit';
+
+export const cardStyles = css`
+    :host {
+        display: block;
+    }
+
+    ha-card {
+        overflow: hidden;
+        color: var(--primary-text-color);
+    }
+
+    .content {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 128px;
+        gap: var(--ha-space-3, 12px);
+        align-items: center;
+        width: 100%;
+        padding: var(--ha-space-4, 16px);
+        text-align: left;
+        font: inherit;
+    }
+
+    .name {
+        font-size: var(--ha-font-size-xl, 22px);
+        font-weight: var(--ha-font-weight-medium, 500);
+    }
+    .status {
+        margin-top: var(--ha-space-3, 12px);
+        color: var(--morek-color);
+        font-size: var(--ha-font-size-l, 16px);
+        font-weight: var(--ha-font-weight-medium, 500);
+    }
+    .metrics {
+        display: flex;
+        gap: var(--ha-space-4, 16px);
+        margin-top: var(--ha-space-3, 12px);
+    }
+    .metric {
+        display: grid;
+        gap: 2px;
+    }
+    .metric-label {
+        color: var(--secondary-text-color);
+        font-size: var(--ha-font-size-s, 12px);
+    }
+    .metric-value {
+        font-size: var(--ha-font-size-l, 16px);
+        font-weight: var(--ha-font-weight-medium, 500);
+    }
+    .charger-image {
+        width: 128px;
+        height: 160px;
+        object-fit: contain;
+    }
+    .actions {
+        border-top: 1px solid var(--divider-color, rgba(0, 0, 0, 0.08));
+        padding: var(--ha-space-3, 12px) var(--ha-space-4, 16px);
+    }
+    .action-button {
+        width: 100%;
+        appearance: none;
+        border: 0;
+        border-radius: var(--ha-border-radius-lg, 12px);
+        background: color-mix(in srgb, var(--morek-color) 14%, transparent);
+        color: var(--morek-color);
+        padding: 12px 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font: inherit;
+        font-weight: var(--ha-font-weight-medium, 500);
+    }
+    .action-button:hover {
+        background: color-mix(in srgb, var(--morek-color) 22%, transparent);
+    }
+    .action-button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+    .action-button ha-icon {
+        --mdc-icon-size: 22px;
+    }
+`;
