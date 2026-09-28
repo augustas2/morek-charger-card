@@ -1,4 +1,10 @@
-import { html, LitElement, type CSSResultGroup, type TemplateResult } from 'lit';
+import {
+    html,
+    LitElement,
+    type CSSResultGroup,
+    type PropertyValues,
+    type TemplateResult,
+} from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { HomeAssistant } from 'custom-card-helpers';
@@ -66,6 +72,10 @@ export class MorekChargerCard extends LitElement {
 
     @state() private config?: MorekCardConfig;
 
+    @state() private isToggling = false;
+
+    private pendingChargeControlState: string | undefined;
+
     public setConfig(config: MorekCardConfig): void {
         if (!config.entity) {
             throw new Error(
@@ -131,8 +141,10 @@ export class MorekChargerCard extends LitElement {
         const sessionEnergy =
             this.hass?.states[this.config?.session_energy_entity ?? '']?.state;
         const chargeControlEntity = this.config?.charge_control_entity;
-        const isChargeControlOn =
-            this.hass?.states[chargeControlEntity ?? '']?.state === 'on';
+        const chargeControlState = this.hass?.states[chargeControlEntity ?? '']?.state;
+        const isChargeControlOn = chargeControlState === 'on';
+        const canToggleCharging =
+            chargeControlState === 'on' || chargeControlState === 'off';
         const language = this.hass?.language;
         const label = localize(
             isChargeControlOn ? 'card.stop_charging' : 'card.start_charging',
@@ -146,14 +158,27 @@ export class MorekChargerCard extends LitElement {
                         <div class="name">${name}</div>
                         <div
                             class="status"
+                            role="button"
+                            tabindex="0"
+                            aria-label=${localize('card.open_status', language)}
                             @click=${() => this.openMoreInfo(statusEntity)}
+                            @keydown=${(event: KeyboardEvent) =>
+                                this.openMoreInfoOnKeydown(event, statusEntity)}
                         >
                             ${statusText(status, language)}
                         </div>
                         <div class="metrics">
                             <div
                                 class="metric"
+                                role="button"
+                                tabindex="0"
+                                aria-label=${localize('card.open_current_usage', language)}
                                 @click=${() => this.openMoreInfo(this.config?.power_entity)}
+                                @keydown=${(event: KeyboardEvent) =>
+                                    this.openMoreInfoOnKeydown(
+                                        event,
+                                        this.config?.power_entity,
+                                    )}
                             >
                                 <span class="metric-label"
                                     >${localize('card.current_usage', language)}</span
@@ -163,8 +188,16 @@ export class MorekChargerCard extends LitElement {
                             </div>
                             <div
                                 class="metric"
+                                role="button"
+                                tabindex="0"
+                                aria-label=${localize('card.open_session_time', language)}
                                 @click=${() =>
                                     this.openMoreInfo(this.config?.session_time_entity)}
+                                @keydown=${(event: KeyboardEvent) =>
+                                    this.openMoreInfoOnKeydown(
+                                        event,
+                                        this.config?.session_time_entity,
+                                    )}
                             >
                                 <span class="metric-label"
                                     >${localize('card.session_time', language)}</span
@@ -174,8 +207,16 @@ export class MorekChargerCard extends LitElement {
                             </div>
                             <div
                                 class="metric"
+                                role="button"
+                                tabindex="0"
+                                aria-label=${localize('card.open_session_energy', language)}
                                 @click=${() =>
                                     this.openMoreInfo(this.config?.session_energy_entity)}
+                                @keydown=${(event: KeyboardEvent) =>
+                                    this.openMoreInfoOnKeydown(
+                                        event,
+                                        this.config?.session_energy_entity,
+                                    )}
                             >
                                 <span class="metric-label"
                                     >${localize('card.session_energy', language)}</span
@@ -196,7 +237,7 @@ export class MorekChargerCard extends LitElement {
                         class="action-button"
                         type="button"
                         aria-label=${label}
-                        ?disabled=${!chargeControlEntity || !this.hass}
+                        ?disabled=${!canToggleCharging || this.isToggling}
                         @click=${(event: Event) =>
                             void this.toggleCharging(event, chargeControlEntity)}
                     >
@@ -225,6 +266,16 @@ export class MorekChargerCard extends LitElement {
         );
     }
 
+    private openMoreInfoOnKeydown(
+        event: KeyboardEvent,
+        entityId: string | undefined,
+    ): void {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        this.openMoreInfo(entityId);
+    }
+
     private async toggleCharging(
         event: Event,
         entityId: string | undefined,
@@ -232,7 +283,28 @@ export class MorekChargerCard extends LitElement {
         event.stopPropagation();
 
         if (!this.hass || !entityId) return;
-        await this.hass.callService('switch', 'toggle', { entity_id: entityId });
+
+        this.pendingChargeControlState = this.hass.states[entityId]?.state;
+        this.isToggling = true;
+
+        try {
+            await this.hass.callService('switch', 'toggle', { entity_id: entityId });
+        } catch (error) {
+            this.isToggling = false;
+            this.pendingChargeControlState = undefined;
+            throw error;
+        }
+    }
+
+    protected override updated(changedProperties: PropertyValues<this>): void {
+        if (!changedProperties.has('hass') || !this.isToggling) return;
+
+        const state = this.hass?.states[this.config?.charge_control_entity ?? '']?.state;
+
+        if (state !== this.pendingChargeControlState) {
+            this.isToggling = false;
+            this.pendingChargeControlState = undefined;
+        }
     }
 
     public static override styles: CSSResultGroup = cardStyles;
