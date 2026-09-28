@@ -151,21 +151,32 @@ export class MorekChargerCard extends LitElement {
                             ${statusText(status, language)}
                         </div>
                         <div class="metrics">
-                            <div class="metric">
+                            <div
+                                class="metric"
+                                @click=${() => this.openMoreInfo(this.config?.power_entity)}
+                            >
                                 <span class="metric-label"
                                     >${localize('card.current_usage', language)}</span
                                 ><span class="metric-value"
                                     >${displayValue(power, 2, 'kW')}</span
                                 >
                             </div>
-                            <div class="metric">
+                            <div
+                                class="metric"
+                                @click=${() =>
+                                    this.openMoreInfo(this.config?.session_time_entity)}
+                            >
                                 <span class="metric-label"
                                     >${localize('card.session_time', language)}</span
                                 ><span class="metric-value"
                                     >${sessionTime(time, language)}</span
                                 >
                             </div>
-                            <div class="metric">
+                            <div
+                                class="metric"
+                                @click=${() =>
+                                    this.openMoreInfo(this.config?.session_energy_entity)}
+                            >
                                 <span class="metric-label"
                                     >${localize('card.session_energy', language)}</span
                                 ><span class="metric-value"
