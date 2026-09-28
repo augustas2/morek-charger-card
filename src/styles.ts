@@ -84,8 +84,8 @@ export const cardStyles = css`
         appearance: none;
         border: 0;
         border-radius: var(--ha-border-radius-lg, 12px);
-        background: color-mix(in srgb, var(--morek-color) 14%, transparent);
-        color: var(--morek-color);
+        background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+        color: var(--primary-color);
         padding: 12px 16px;
         display: flex;
         justify-content: center;
@@ -94,12 +94,16 @@ export const cardStyles = css`
         cursor: pointer;
         font: inherit;
         font-weight: var(--ha-font-weight-medium, 500);
+        transition:
+            transform 120ms ease,
+            opacity 120ms ease,
+            background-color 120ms ease;
     }
-    
-    .action-button:hover {
-        background: color-mix(in srgb, var(--morek-color) 22%, transparent);
+
+    .action-button:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--primary-color) 22%, transparent);
     }
-    
+
     .action-button:disabled {
         opacity: 0.45;
         cursor: not-allowed;
