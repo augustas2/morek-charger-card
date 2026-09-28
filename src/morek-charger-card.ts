@@ -2,7 +2,7 @@ import { html, LitElement, type CSSResultGroup, type TemplateResult } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { HomeAssistant } from 'custom-card-helpers';
-import chargerImage from './assets/morek-charger.png';
+import chargerImage from './assets/charger.png';
 import { cardStyles } from './styles';
 import { getCurrentDocumentLanguage, localize } from './translations/localize';
 import type { MorekCardConfig } from './types';
