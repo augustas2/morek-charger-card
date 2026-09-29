@@ -32,12 +32,16 @@ const displayValue = (
     value: string | undefined,
     decimals: number,
     unit: string,
+    language?: string,
 ): string => {
     const numberValue = Number(value);
 
     if (!Number.isFinite(numberValue)) return '—';
 
-    return `${numberValue.toFixed(decimals)} ${unit}`;
+    return `${new Intl.NumberFormat(language, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    }).format(numberValue)} ${unit}`;
 };
 
 const sessionTime = (value: string | undefined, language?: string): string => {
@@ -191,7 +195,7 @@ export class MorekChargerCard extends LitElement {
                 powerEntity,
                 'card.current_usage',
                 'card.open_current_usage',
-                displayValue(power, 2, 'kW'),
+                displayValue(power, 2, 'kW', language),
                 language,
             ),
             this.renderMetric(
@@ -205,7 +209,7 @@ export class MorekChargerCard extends LitElement {
                 sessionEnergyEntity,
                 'card.session_energy',
                 'card.open_session_energy',
-                displayValue(sessionEnergy, 2, 'kWh'),
+                displayValue(sessionEnergy, 2, 'kWh', language),
                 language,
             ),
             this.renderMetric(
