@@ -356,7 +356,7 @@ export class MorekChargerCard extends LitElement {
 window.customCards = window.customCards ?? [];
 window.customCards.push({
     type: CARD_TYPE,
-    name: 'Morek Charger Card',
+    name: 'Morek EV Charger Card',
     preview: true,
     description:
         'Morek EV charger status, live power, session duration, and charging control.',

@@ -1,6 +1,6 @@
-# Morek Charger Card
+# Morek EV Charger Card
 
-[![HACS validation](https://github.com/augustas2/morek-charger-card/actions/workflows/validate-hacs.yml/badge.svg)](https://github.com/augustas2/morek-charger-card/actions/workflows/validate-hacs.yml)
+[![Release](https://github.com/augustas2/morek-charger-card/actions/workflows/release.yml/badge.svg)](https://github.com/augustas2/morek-charger-card/actions/workflows/release.yml)
 
 A Home Assistant dashboard card for Morek EV chargers connected through OCPP. It displays the charger status, selected live-session metrics, and a status-aware charging control.
 
@@ -19,7 +19,7 @@ A Home Assistant dashboard card for Morek EV chargers connected through OCPP. It
 ### HACS
 
 1. In HACS, open **Dashboard** and choose **Download repositories**.
-2. Search for **Morek Charger Card**. Until it is included in the default HACS repository, add `augustas2/morek-charger-card` as a custom repository with the **Dashboard** category first.
+2. Search for **Morek EV Charger Card**. Until it is included in the default HACS repository, add `augustas2/morek-charger-card` as a custom repository with the **Dashboard** category first.
 3. Download the card.
 4. Add the dashboard resource if HACS does not add it automatically:
 
@@ -46,7 +46,7 @@ Refresh the browser after installing or updating the resource.
 ```yaml
 type: custom:morek-charger-card
 entity: sensor.charger_status_connector
-name: Morek EV 22 kW Charger
+name: Morek EV Charger
 power_entity: sensor.charger_power_active_import
 session_time_entity: sensor.charger_time_session
 session_energy_entity: sensor.charger_energy_session
@@ -76,13 +76,3 @@ The card shows **Start charging** while `charge_control_entity` is off and **Sto
 | Stop charging  | `Charging`, `SuspendedEV`, `SuspendedEVSE`, `Finishing` |
 
 The control is disabled for all other statuses, including `Available`, `Faulted`, `Unavailable`, and `Unknown`.
-
-## Development
-
-```sh
-npm install
-npm run check
-npm run build
-```
-
-The production card is written to `dist/morek-charger-card.js` and is committed so HACS can install it.
