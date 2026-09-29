@@ -1,14 +1,14 @@
-name: Validate
+name: Release
 
 on:
     push:
         branches: [master]
 
 permissions:
-    contents: read
+    contents: write
 
 jobs:
-    validate:
+    release:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -21,6 +21,28 @@ jobs:
             - run: npm ci
             - run: npm run check
             - run: npm run build
+
+            - name: Read package version
+              id: package
+              run: echo "tag=v$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
+            - name: Check whether the release tag exists
+              id: tag
+              run: |
+                  if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.package.outputs.tag }}"; then
+                      echo "exists=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "exists=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Create GitHub release
+              if: steps.tag.outputs.exists == 'false'
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ steps.package.outputs.tag }}
+                  target_commitish: ${{ github.sha }}
+                  generate_release_notes: true
+                  files: dist/morek-charger-card.js
 
             - name: Validate HACS repository
               uses: hacs/action@main
