@@ -66,6 +66,23 @@ const statusText = (status: string, language?: string): string => {
     return translated === translationKey ? status : translated;
 };
 
+const normalizedStatus = (status: string): string => status.trim().toLowerCase();
+
+const startableStatuses = ['available', 'preparing', 'finishing'];
+const stoppableStatuses = ['charging', 'suspendedev', 'suspendedevse', 'finishing'];
+
+const canControlCharging = (
+    chargerStatus: string,
+    chargeControlState: string | undefined,
+): boolean => {
+    const status = normalizedStatus(chargerStatus);
+
+    return (
+        (chargeControlState === 'off' && startableStatuses.includes(status)) ||
+        (chargeControlState === 'on' && stoppableStatuses.includes(status))
+    );
+};
+
 @customElement(CARD_TYPE)
 export class MorekChargerCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
@@ -143,8 +160,7 @@ export class MorekChargerCard extends LitElement {
         const chargeControlEntity = this.config?.charge_control_entity;
         const chargeControlState = this.hass?.states[chargeControlEntity ?? '']?.state;
         const isChargeControlOn = chargeControlState === 'on';
-        const canToggleCharging =
-            chargeControlState === 'on' || chargeControlState === 'off';
+        const canToggleCharging = canControlCharging(status, chargeControlState);
         const language = this.hass?.language;
         const label = localize(
             isChargeControlOn ? 'card.stop_charging' : 'card.start_charging',
@@ -239,7 +255,7 @@ export class MorekChargerCard extends LitElement {
                         aria-label=${label}
                         ?disabled=${!canToggleCharging || this.isToggling}
                         @click=${(event: Event) =>
-                            void this.toggleCharging(event, chargeControlEntity)}
+                            void this.toggleCharging(event, chargeControlEntity, status)}
                     >
                         <ha-icon
                             icon=${
@@ -279,12 +295,17 @@ export class MorekChargerCard extends LitElement {
     private async toggleCharging(
         event: Event,
         entityId: string | undefined,
+        chargerStatus: string,
     ): Promise<void> {
         event.stopPropagation();
 
         if (!this.hass || !entityId) return;
 
-        this.pendingChargeControlState = this.hass.states[entityId]?.state;
+        const chargeControlState = this.hass.states[entityId]?.state;
+
+        if (!canControlCharging(chargerStatus, chargeControlState)) return;
+
+        this.pendingChargeControlState = chargeControlState;
         this.isToggling = true;
 
         try {
