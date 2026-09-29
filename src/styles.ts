@@ -11,9 +11,10 @@ export const cardStyles = css`
     }
 
     .content {
+        box-sizing: border-box;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 128px;
-        gap: var(--ha-space-3, 12px);
+        grid-template-columns: minmax(0, 1fr) 110px;
+        gap: var(--ha-space-2, 12px);
         align-items: center;
         width: 100%;
         padding: var(--ha-space-4, 16px);
@@ -30,20 +31,20 @@ export const cardStyles = css`
         appearance: none;
         border: 0;
         background: transparent;
-        margin-top: var(--ha-space-3, 12px);
+        margin-top: var(--ha-space-5, 16px);
         color: var(--morek-color);
         cursor: pointer;
         padding: 0;
         text-align: left;
-        font-size: var(--ha-font-size-l, 16px);
+        font-size: var(--ha-font-size-xl, 16px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
 
     .metrics {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--ha-space-4, 12px) var(--ha-space-8, 16px);
-        margin-top: var(--ha-space-3, 12px);
+        gap: var(--ha-space-4, 12px) var(--ha-space-6, 16px);
+        margin-top: var(--ha-space-5, 16px);
     }
 
     .metric {
@@ -68,7 +69,7 @@ export const cardStyles = css`
     }
 
     .charger-image {
-        width: 128px;
+        width: 110px;
         height: 160px;
         object-fit: contain;
     }
