@@ -37,12 +37,13 @@ jobs:
 
             - name: Create GitHub release
               if: steps.tag.outputs.exists == 'false'
-              uses: softprops/action-gh-release@v2
-              with:
-                  tag_name: ${{ steps.package.outputs.tag }}
-                  target_commitish: ${{ github.sha }}
-                  generate_release_notes: true
-                  files: dist/morek-charger-card.js
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: >
+                  gh release create "${{ steps.package.outputs.tag }}"
+                  dist/morek-charger-card.js
+                  --target "$GITHUB_SHA"
+                  --generate-notes
 
             - name: Validate HACS repository
               uses: hacs/action@main
