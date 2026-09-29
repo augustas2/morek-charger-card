@@ -4,7 +4,7 @@
 
 A Home Assistant dashboard card for Morek EV chargers connected through OCPP. It displays the charger status, selected live-session metrics, and a status-aware charging control.
 
-<img src="https://raw.githubusercontent.com/augustas2/morek-charger-card/master/src/assets/charger.png" alt="Morek EV charger" width="160">
+<img src="https://raw.githubusercontent.com/augustas2/morek-charger-card/master/src/assets/card.png" alt="Morek EV charger" width="160">
 
 ## Features
 
