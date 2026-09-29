@@ -9,17 +9,15 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { HomeAssistant } from 'custom-card-helpers';
 import chargerImage from './assets/charger.png';
+import {
+    CARD_TYPE,
+    DEFAULT_CONFIG,
+    STARTABLE_CHARGER_STATUSES,
+    STOPPABLE_CHARGER_STATUSES,
+} from './constants';
 import { cardStyles } from './styles';
 import { getCurrentDocumentLanguage, localize } from './translations/localize';
 import type { MorekCardConfig } from './types';
-
-const CARD_TYPE = 'morek-charger-card';
-const DEFAULT_CONFIG = {
-    power_entity: 'sensor.charger_power_active_import',
-    session_time_entity: 'sensor.charger_time_session',
-    session_energy_entity: 'sensor.charger_energy_session',
-    charge_control_entity: 'switch.charger_charge_control',
-} satisfies Partial<MorekCardConfig>;
 
 const stateColor = (status: string): string => {
     if (status.toLowerCase() === 'charging') return 'var(--success-color, #43a047)';
@@ -68,9 +66,6 @@ const statusText = (status: string, language?: string): string => {
 
 const normalizedStatus = (status: string): string => status.trim().toLowerCase();
 
-const startableStatuses = ['available', 'preparing', 'finishing'];
-const stoppableStatuses = ['charging', 'suspendedev', 'suspendedevse', 'finishing'];
-
 const canControlCharging = (
     chargerStatus: string,
     chargeControlState: string | undefined,
@@ -78,8 +73,8 @@ const canControlCharging = (
     const status = normalizedStatus(chargerStatus);
 
     return (
-        (chargeControlState === 'off' && startableStatuses.includes(status)) ||
-        (chargeControlState === 'on' && stoppableStatuses.includes(status))
+        (chargeControlState === 'off' && STARTABLE_CHARGER_STATUSES.has(status)) ||
+        (chargeControlState === 'on' && STOPPABLE_CHARGER_STATUSES.has(status))
     );
 };
 
