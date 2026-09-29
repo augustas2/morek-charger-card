@@ -53,7 +53,6 @@ export const cardStyles = css`
         color: inherit;
         cursor: pointer;
         display: grid;
-        gap: 2px;
         padding: 0;
         text-align: left;
     }

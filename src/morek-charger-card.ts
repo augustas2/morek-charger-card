@@ -56,6 +56,21 @@ const sessionTime = (value: string | undefined, language?: string): string => {
         : `${formattedMinutes} ${localize('card.minutes_short', language)}`;
 };
 
+const sessionCost = (
+    energy: string | undefined,
+    electricityCost: string | undefined,
+    language?: string,
+): string => {
+    const total = Number(energy) * Number(electricityCost);
+
+    if (!Number.isFinite(total)) return '—';
+
+    return new Intl.NumberFormat(language, {
+        style: 'currency',
+        currency: 'EUR',
+    }).format(total);
+};
+
 const statusText = (status: string, language?: string): string => {
     const key = status.toLowerCase().replaceAll(/[^a-z]/g, '');
     const translationKey = `states.${key}`;
@@ -133,6 +148,12 @@ export class MorekChargerCard extends LitElement {
                     selector: { entity: { domain: 'sensor' } },
                 },
                 {
+                    name: 'electricity_cost_entity',
+                    selector: {
+                        entity: { domain: ['input_number', 'number', 'sensor'] },
+                    },
+                },
+                {
                     name: 'charge_control_entity',
                     selector: { entity: { domain: 'switch' } },
                 },
@@ -148,10 +169,14 @@ export class MorekChargerCard extends LitElement {
             ? (this.hass?.states[statusEntity]?.state ?? 'Unknown')
             : 'Unknown';
         const name = this.config?.name ?? 'Morek EV Charger';
-        const power = this.hass?.states[this.config?.power_entity ?? '']?.state;
-        const time = this.hass?.states[this.config?.session_time_entity ?? '']?.state;
-        const sessionEnergy =
-            this.hass?.states[this.config?.session_energy_entity ?? '']?.state;
+        const powerEntity = this.config?.power_entity;
+        const power = this.hass?.states[powerEntity ?? '']?.state;
+        const sessionTimeEntity = this.config?.session_time_entity;
+        const time = this.hass?.states[sessionTimeEntity ?? '']?.state;
+        const sessionEnergyEntity = this.config?.session_energy_entity;
+        const sessionEnergy = this.hass?.states[sessionEnergyEntity ?? '']?.state;
+        const electricityCostEntity = this.config?.electricity_cost_entity;
+        const electricityCost = this.hass?.states[electricityCostEntity ?? '']?.state;
         const chargeControlEntity = this.config?.charge_control_entity;
         const chargeControlState = this.hass?.states[chargeControlEntity ?? '']?.state;
         const isChargeControlOn = chargeControlState === 'on';
@@ -178,64 +203,123 @@ export class MorekChargerCard extends LitElement {
                         >
                             ${statusText(status, language)}
                         </div>
-                        <div class="metrics">
-                            <div
-                                class="metric"
-                                role="button"
-                                tabindex="0"
-                                aria-label=${localize('card.open_current_usage', language)}
-                                @click=${() => this.openMoreInfo(this.config?.power_entity)}
-                                @keydown=${(event: KeyboardEvent) =>
-                                    this.openMoreInfoOnKeydown(
-                                        event,
-                                        this.config?.power_entity,
-                                    )}
-                            >
-                                <span class="metric-label"
-                                    >${localize('card.current_usage', language)}</span
-                                ><span class="metric-value"
-                                    >${displayValue(power, 2, 'kW')}</span
-                                >
-                            </div>
-                            <div
-                                class="metric"
-                                role="button"
-                                tabindex="0"
-                                aria-label=${localize('card.open_session_time', language)}
-                                @click=${() =>
-                                    this.openMoreInfo(this.config?.session_time_entity)}
-                                @keydown=${(event: KeyboardEvent) =>
-                                    this.openMoreInfoOnKeydown(
-                                        event,
-                                        this.config?.session_time_entity,
-                                    )}
-                            >
-                                <span class="metric-label"
-                                    >${localize('card.session_time', language)}</span
-                                ><span class="metric-value"
-                                    >${sessionTime(time, language)}</span
-                                >
-                            </div>
-                            <div
-                                class="metric"
-                                role="button"
-                                tabindex="0"
-                                aria-label=${localize('card.open_session_energy', language)}
-                                @click=${() =>
-                                    this.openMoreInfo(this.config?.session_energy_entity)}
-                                @keydown=${(event: KeyboardEvent) =>
-                                    this.openMoreInfoOnKeydown(
-                                        event,
-                                        this.config?.session_energy_entity,
-                                    )}
-                            >
-                                <span class="metric-label"
-                                    >${localize('card.session_energy', language)}</span
-                                ><span class="metric-value"
-                                    >${displayValue(sessionEnergy, 2, 'kWh')}</span
-                                >
-                            </div>
-                        </div>
+                        ${
+                            powerEntity ||
+                            sessionTimeEntity ||
+                            sessionEnergyEntity ||
+                            electricityCostEntity
+                                ? html`<div class="metrics">
+                                      ${
+                                          powerEntity
+                                              ? html`<div
+                                                    class="metric"
+                                                    role="button"
+                                                    tabindex="0"
+                                                    aria-label=${localize('card.open_current_usage', language)}
+                                                    @click=${() => this.openMoreInfo(powerEntity)}
+                                                    @keydown=${(event: KeyboardEvent) =>
+                                                        this.openMoreInfoOnKeydown(
+                                                            event,
+                                                            powerEntity,
+                                                        )}
+                                                >
+                                                    <span class="metric-label"
+                                                        >${localize('card.current_usage', language)}</span
+                                                    ><span class="metric-value"
+                                                        >${displayValue(power, 2, 'kW')}</span
+                                                    >
+                                                </div> `
+                                              : null
+                                      }
+                                      ${
+                                          sessionTimeEntity
+                                              ? html`<div
+                                                    class="metric"
+                                                    role="button"
+                                                    tabindex="0"
+                                                    aria-label=${localize('card.open_session_time', language)}
+                                                    @click=${() =>
+                                                        this.openMoreInfo(
+                                                            sessionTimeEntity,
+                                                        )}
+                                                    @keydown=${(event: KeyboardEvent) =>
+                                                        this.openMoreInfoOnKeydown(
+                                                            event,
+                                                            sessionTimeEntity,
+                                                        )}
+                                                >
+                                                    <span class="metric-label"
+                                                        >${localize('card.session_time', language)}</span
+                                                    ><span class="metric-value"
+                                                        >${sessionTime(time, language)}</span
+                                                    >
+                                                </div> `
+                                              : null
+                                      }
+                                      ${
+                                          sessionEnergyEntity
+                                              ? html`<div
+                                                    class="metric"
+                                                    role="button"
+                                                    tabindex="0"
+                                                    aria-label=${localize('card.open_session_energy', language)}
+                                                    @click=${() =>
+                                                        this.openMoreInfo(
+                                                            sessionEnergyEntity,
+                                                        )}
+                                                    @keydown=${(event: KeyboardEvent) =>
+                                                        this.openMoreInfoOnKeydown(
+                                                            event,
+                                                            sessionEnergyEntity,
+                                                        )}
+                                                >
+                                                    <span class="metric-label"
+                                                        >${localize('card.session_energy', language)}</span
+                                                    ><span class="metric-value"
+                                                        >${displayValue(sessionEnergy, 2, 'kWh')}</span
+                                                    >
+                                                </div> `
+                                              : null
+                                      }
+                                      ${
+                                          electricityCostEntity
+                                              ? html`
+                                                    <div
+                                                        class="metric"
+                                                        role="button"
+                                                        tabindex="0"
+                                                        aria-label=${localize(
+                                                            'card.open_session_cost',
+                                                            language,
+                                                        )}
+                                                        @click=${() =>
+                                                            this.openMoreInfo(
+                                                                electricityCostEntity,
+                                                            )}
+                                                        @keydown=${(
+                                                            event: KeyboardEvent,
+                                                        ) =>
+                                                            this.openMoreInfoOnKeydown(
+                                                                event,
+                                                                electricityCostEntity,
+                                                            )}
+                                                    >
+                                                        <span class="metric-label"
+                                                            >${localize('card.session_cost', language)}</span
+                                                        ><span class="metric-value"
+                                                            >${sessionCost(
+                                                                sessionEnergy,
+                                                                electricityCost,
+                                                                language,
+                                                            )}</span
+                                                        >
+                                                    </div>
+                                                `
+                                              : null
+                                      }
+                                  </div>`
+                                : null
+                        }
                     </div>
                     <img
                         class="charger-image"

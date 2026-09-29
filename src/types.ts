@@ -6,6 +6,7 @@ export interface MorekCardConfig extends LovelaceCardConfig {
     power_entity?: string;
     session_time_entity?: string;
     session_energy_entity?: string;
+    electricity_cost_entity?: string;
     charge_control_entity?: string;
 }
 

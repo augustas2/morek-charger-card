@@ -5,15 +5,18 @@
         "power_entity": "Galios jutiklis",
         "session_time_entity": "Sesijos laiko jutiklis",
         "session_energy_entity": "Sesijos energijos jutiklis",
+        "electricity_cost_entity": "Elektros kainos jutiklis",
         "charge_control_entity": "Įkrovimo valdymo jungiklis"
     },
     "card": {
         "current_usage": "Dabartinė galia",
         "session_time": "Sesijos laikas",
         "session_energy": "Sesijos energija",
+        "session_cost": "Sesijos kaina",
         "open_current_usage": "Atidaryti dabartinės galios informaciją",
         "open_session_time": "Atidaryti sesijos laiko informaciją",
         "open_session_energy": "Atidaryti sesijos energijos informaciją",
+        "open_session_cost": "Atidaryti elektros kainos informaciją",
         "open_status": "Atidaryti įkroviklio būsenos informaciją",
         "start_charging": "Pradėti įkrovimą",
         "stop_charging": "Sustabdyti įkrovimą",

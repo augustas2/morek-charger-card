@@ -5,15 +5,18 @@
         "power_entity": "Power sensor",
         "session_time_entity": "Session time sensor",
         "session_energy_entity": "Session energy sensor",
+        "electricity_cost_entity": "Electricity price sensor",
         "charge_control_entity": "Charging control switch"
     },
     "card": {
         "current_usage": "Current usage",
         "session_time": "Session time",
         "session_energy": "Session energy",
+        "session_cost": "Session cost",
         "open_current_usage": "Open current usage details",
         "open_session_time": "Open session time details",
         "open_session_energy": "Open session energy details",
+        "open_session_cost": "Open electricity price details",
         "open_status": "Open charger status details",
         "start_charging": "Start charging",
         "stop_charging": "Stop charging",
