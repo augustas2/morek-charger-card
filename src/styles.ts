@@ -14,7 +14,6 @@ export const cardStyles = css`
         box-sizing: border-box;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 110px;
-        gap: var(--ha-space-2, 12px);
         align-items: center;
         width: 100%;
         padding: var(--ha-space-4, 16px);
@@ -41,9 +40,9 @@ export const cardStyles = css`
     }
 
     .metrics {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--ha-space-4, 12px) var(--ha-space-6, 16px);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--ha-space-4, 12px) var(--ha-space-4, 16px);
         margin-top: var(--ha-space-5, 16px);
     }
 
@@ -54,6 +53,7 @@ export const cardStyles = css`
         color: inherit;
         cursor: pointer;
         display: grid;
+        min-width: 0;
         padding: 0;
         text-align: left;
     }

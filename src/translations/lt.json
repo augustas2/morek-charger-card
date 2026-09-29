@@ -29,8 +29,8 @@
         "available": "Neprijungta",
         "preparing": "Ruošiamasi",
         "finishing": "Baigiama",
-        "suspendedev": "Sustabdyta automobilio",
-        "suspendedevse": "Sustabdyta įkroviklio",
+        "suspendedev": "Įkrovimą pristabdė automobilis",
+        "suspendedevse": "Įkrovimą pristabdė įkroviklis",
         "faulted": "Klaida",
         "unavailable": "Neprieinamas",
         "unknown": "Nežinoma"
