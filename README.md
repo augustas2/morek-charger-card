@@ -1,12 +1,47 @@
 # Morek Charger Card
 
-Home Assistant Lovelace card for a Morek EV charger using the OCPP entities shown below.
+[![HACS validation](https://github.com/augustas2/morek-charger-card/actions/workflows/validate-hacs.yml/badge.svg)](https://github.com/augustas2/morek-charger-card/actions/workflows/validate-hacs.yml)
 
-## Install
+A Home Assistant dashboard card for Morek EV chargers connected through OCPP. It displays the charger status, selected live-session metrics, and a status-aware charging control.
 
-Build with `npm run build`, copy `dist/morek-charger-card.js` to `/config/www/`, then add it as a module dashboard resource at `/local/morek-charger-card.js`.
+<img src="https://raw.githubusercontent.com/augustas2/morek-charger-card/master/src/assets/charger.png" alt="Morek EV charger" width="160">
 
-## Card configuration
+## Features
+
+- Localized English and Lithuanian interface
+- Optional power, session time, session energy, and session-cost metrics
+- Session-cost calculation from energy and an EUR/kWh price entity
+- Contextual Start/Stop control that is enabled only for suitable OCPP statuses
+- Responsive two-column metric layout
+
+## Installation
+
+### HACS
+
+1. In HACS, open **Dashboard** and choose **Download repositories**.
+2. Search for **Morek Charger Card**. Until it is included in the default HACS repository, add `augustas2/morek-charger-card` as a custom repository with the **Dashboard** category first.
+3. Download the card.
+4. Add the dashboard resource if HACS does not add it automatically:
+
+    ```yaml
+    url: /hacsfiles/morek-charger-card/morek-charger-card.js
+    type: module
+    ```
+
+### Manual installation
+
+1. Download `morek-charger-card.js` from the latest release.
+2. Copy it to `/config/www/morek-charger-card.js`.
+3. Add the dashboard resource:
+
+    ```yaml
+    url: /local/morek-charger-card.js
+    type: module
+    ```
+
+Refresh the browser after installing or updating the resource.
+
+## Configuration
 
 ```yaml
 type: custom:morek-charger-card
@@ -19,8 +54,35 @@ electricity_cost_entity: input_number.electricity_cost_eur_kwh
 charge_control_entity: switch.charger_charge_control
 ```
 
-The card uses the state of `charge_control_entity` for its single contextual control. It shows **Stop charging** while the switch is `on`, **Start charging** while it is `off`, and calls `switch.toggle` when pressed. The button is enabled only when the charger status permits that action: **Start charging** requires `Preparing`; **Stop charging** requires `Charging`, `SuspendedEV`, `SuspendedEVSE`, or `Finishing`. It stays disabled for `Available`, `Faulted`, `Unavailable`, and `Unknown`.
+| Option                    | Required | Description                                                              |
+| ------------------------- | -------- | ------------------------------------------------------------------------ |
+| `entity`                  | Yes      | Charger connector-status sensor.                                         |
+| `name`                    | No       | Card title. Defaults to `Morek EV Charger`.                              |
+| `power_entity`            | No       | Active charging-power sensor, displayed in kW.                           |
+| `session_time_entity`     | No       | Current session duration, in minutes.                                    |
+| `session_energy_entity`   | No       | Current session energy, in kWh.                                          |
+| `electricity_cost_entity` | No       | Electricity price in EUR/kWh. Shows session cost when configured.        |
+| `charge_control_entity`   | No       | OCPP Charge Control switch. Defaults to `switch.charger_charge_control`. |
 
-`electricity_cost_entity` is optional. When configured, the card calculates and shows the session cost in EUR from the session energy and electricity price (EUR/kWh).
+Metrics are displayed only when their corresponding entity is configured. Session cost is calculated as session energy multiplied by the electricity price.
 
-`name` is optional. When it is omitted, the card displays `Morek EV 22 kW Charger` instead of the selected status sensor's friendly name.
+## Charging control
+
+The card shows **Start charging** while `charge_control_entity` is off and **Stop charging** while it is on. To avoid commands that the charger cannot act on, the button is enabled only for these connector statuses:
+
+| Action         | Enabled statuses                                        |
+| -------------- | ------------------------------------------------------- |
+| Start charging | `Preparing`                                             |
+| Stop charging  | `Charging`, `SuspendedEV`, `SuspendedEVSE`, `Finishing` |
+
+The control is disabled for all other statuses, including `Available`, `Faulted`, `Unavailable`, and `Unknown`.
+
+## Development
+
+```sh
+npm install
+npm run check
+npm run build
+```
+
+The production card is written to `dist/morek-charger-card.js` and is committed so HACS can install it.
