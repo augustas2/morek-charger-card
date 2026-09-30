@@ -7,7 +7,7 @@ export const cardStyles = css`
 
     ha-card {
         overflow: hidden;
-        color: var(--primary-text-color);
+        color: var(--primary-text-color, #212121);
     }
 
     .content {
@@ -22,7 +22,7 @@ export const cardStyles = css`
     }
 
     .name {
-        font-size: var(--ha-font-size-xl, 22px);
+        font-size: var(--ha-font-size-xl, 20px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
 
@@ -30,20 +30,20 @@ export const cardStyles = css`
         appearance: none;
         border: 0;
         background: transparent;
-        margin-top: var(--ha-space-5, 16px);
-        color: var(--morek-color);
+        margin-top: var(--ha-space-5, 20px);
+        color: var(--morek-color, var(--primary-color, #009ac7));
         cursor: pointer;
         padding: 0;
         text-align: left;
-        font-size: var(--ha-font-size-xl, 16px);
+        font-size: var(--ha-font-size-xl, 20px);
         font-weight: var(--ha-font-weight-medium, 500);
     }
 
     .metrics {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--ha-space-4, 12px) var(--ha-space-4, 16px);
-        margin-top: var(--ha-space-5, 16px);
+        gap: var(--ha-space-4, 16px);
+        margin-top: var(--ha-space-5, 20px);
     }
 
     .metric {
@@ -59,7 +59,7 @@ export const cardStyles = css`
     }
 
     .metric-label {
-        color: var(--secondary-text-color);
+        color: var(--secondary-text-color, #727272);
         font-size: var(--ha-font-size-s, 12px);
     }
 
@@ -75,7 +75,7 @@ export const cardStyles = css`
     }
 
     .actions {
-        border-top: 1px solid var(--divider-color, rgba(0, 0, 0, 0.08));
+        border-top: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));
         padding: var(--ha-space-3, 12px) var(--ha-space-4, 16px);
     }
 
@@ -84,8 +84,8 @@ export const cardStyles = css`
         appearance: none;
         border: 0;
         border-radius: var(--ha-border-radius-lg, 12px);
-        background: color-mix(in srgb, var(--primary-color) 14%, transparent);
-        color: var(--primary-color);
+        background: color-mix(in srgb, var(--primary-color, #009ac7) 14%, transparent);
+        color: var(--primary-color, #009ac7);
         padding: 12px 16px;
         display: flex;
         justify-content: center;
@@ -95,13 +95,12 @@ export const cardStyles = css`
         font: inherit;
         font-weight: var(--ha-font-weight-medium, 500);
         transition:
-            transform 120ms ease,
             opacity 120ms ease,
             background-color 120ms ease;
     }
 
     .action-button:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--primary-color) 22%, transparent);
+        background: color-mix(in srgb, var(--primary-color, #009ac7) 22%, transparent);
     }
 
     .action-button:disabled {
