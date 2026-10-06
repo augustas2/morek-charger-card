@@ -27,13 +27,13 @@
     "states": {
         "charging": "Įkraunama",
         "available": "Neprijungta",
-        "preparing": "Ruošiamasi",
-        "finishing": "Baigiama",
+        "preparing": "Ruošiamasi įkrauti",
+        "finishing": "Įkrovimas užbaigiamas",
         "suspendedev": "Įkrovimą pristabdė automobilis",
         "suspendedevse": "Įkrovimą pristabdė įkroviklis",
-        "faulted": "Klaida",
-        "unavailable": "Neprieinamas",
-        "unknown": "Nežinoma"
+        "faulted": "Stotelės klaida",
+        "unavailable": "Būsena neprieinama",
+        "unknown": "Būsena nežinoma"
     },
     "errors": {
         "entity_required": "Reikia nurodyti įkroviklio būsenos jutiklį."
